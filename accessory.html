@@ -3,7 +3,13 @@
   <head>
     <title>Car Accessories</title>
     <link rel="stylesheet" href="./css/global.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
   </head>
+
   <body>
     <h1>Car Accessories</h1>
 
@@ -27,11 +33,14 @@
     <h2>Product List</h2>
 
     <table id="productList">
-      <tr>
-        <th>Accessory</th>
-        <th>Amount</th>
-        <th>Price</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Accessory</th>
+          <th>Amount</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
     </table>
 
     <p class="total">Gross Price: $<span id="totalPrice">0</span></p>
@@ -40,21 +49,19 @@
 
     <script>
       function addToProductList() {
-        var accessory = document.getElementById("accessory").value;
-        var accessoryName = document.getElementById("accessory").innerText;
-        var amount = document.getElementById("amount").value;
+        var accessory = $("#accessory").val();
+        var accessoryName = $("#accessory").text();
+        var amount = $("#amount").val();
         var price = calculatePrice(accessory) * amount;
 
-        var table = document.getElementById("productList");
-        var row = table.insertRow(-1);
-        var accessoryCell = row.insertCell(0);
-        var amountCell = row.insertCell(1);
-        var priceCell = row.insertCell(2);
-
-        accessoryCell.innerHTML = accessory;
-        amountCell.innerHTML = amount;
-        priceCell.innerHTML = "$" + price;
-
+        var table = $("#productList tbody");
+        table.before(
+          `<tr>
+            <td>${accessory}</td>
+            <td>${amount}</td>
+            <td>${price}</td>
+            </tr>`,
+        );
         updateTotalPrice(price);
       }
 
@@ -78,23 +85,23 @@
       var totalPrice = 0;
 
       function updateTotalPrice(price) {
-        var totalPriceElement = document.getElementById("totalPrice");
-        var totalPrice = parseFloat(totalPriceElement.innerHTML);
+        var totalPriceElement = $("#totalPrice");
+        var totalPrice = parseFloat(totalPriceElement.text());
         totalPrice += price;
-        totalPriceElement.innerHTML = totalPrice.toFixed(2);
+        totalPriceElement.text(totalPrice.toFixed(2));
         calcualteVAT(totalPrice);
       }
 
       function calcualteVAT(totalPrice) {
-        var vatElement = document.getElementById("vat");
-        var netPriceElement = document.getElementById("netPrice");
+        var vatElement = $("#vat");
+        var netPriceElement = $("#netPrice");
         var vatRate = 0.07;
         var vatAmount = (totalPrice * vatRate).toFixed(2);
         var netPrice = (parseFloat(totalPrice) + parseFloat(vatAmount)).toFixed(
           2,
         );
-        vatElement.innerHTML = `VAT: ${vatAmount}`;
-        netPriceElement.innerHTML = `Net Price: ${netPrice}`;
+        vatElement.text(`VAT: ${vatAmount}`);
+        netPriceElement.text(`Net Price: ${netPrice}`);
       }
     </script>
   </body>
